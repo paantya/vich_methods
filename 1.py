@@ -4,13 +4,13 @@
 import numpy as np
 
 def p(x):
-	return 1/np.sqrt(x+3)#np.exp(x/2)
+	return np.exp(x/2) # 1/np.sqrt(x+3)
 	
 def q(x):
-	return 1/(x+4) #(1 - np.power(np.cos(x*np.pi/2),2)/4)
+	return (1 - np.power(np.cos(x*np.pi/2),2)/4) # 1/(x+4)
 
 def f(x):
-	return np.log(x+5) #np.sqrt(x + 1)
+	return np.sqrt(x + 1) # np.log(x+5)
 	
 def printArray(ar,n):
 	for i in np.arange(n+1):
@@ -27,7 +27,8 @@ g6 = float(ll[5])
 x0 = float(ll[6])
 xn = float(ll[7])
 
-n = 13
+ll = raw_input('Введите значение n: ')
+n = int(ll)
 h = (xn - x0) /n
 
 '''
@@ -50,7 +51,7 @@ y = np.zeros((n+1))
 w = ((np.power(h,2)*q(x0) - 2)*g2 + h*(2 - h * p(x0))*g1)
 alfa[0] = 2 * g2 / w
 beta[0] = np.power(h,2) * f(x0) * g2 + h * (2 - h * p(x0)*g3 )
-print(alfa[0],beta[0])
+#print(alfa[0],beta[0])
 for i in np.arange(1,n+1):
 	w = ((2*np.power(h,2)*q(x0+h*i) - 4) - alfa[i-1]*(2 - h * p(x0 + h*i)))
 	alfa[i] = (2 + h * p(x0 + h*i)) / w
