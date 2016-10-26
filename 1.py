@@ -33,16 +33,17 @@ ll = raw_input('Введите значение n:\n')
 n = int(ll)
 h = (xn - x0) /n
 
-def a(i):
-	return (1 / np.power(h,2) - p(x0+i*h) /(2*n))
+def a(j):
+	return (1 / np.power(h,2) - p(x0+j*h) /(2*n))
 
-def c(i):
-	return (1 / np.power(h,2) - p(x0+i*h) /(2*n))
+def c(j):
+	return (1 / np.power(h,2) + p(x0+j*h) /(2*n))
 
-def b(i):
-	return (2 / np.power(h,2) - q(x0+i*h))
-def d(i):
-	return (f(x0+i*h))
+def b(j):
+	return (2 / np.power(h,2) - q(x0+j*h))
+	
+def d(j):
+	return (f(x0+j*h))
 
 
 '''
@@ -62,26 +63,39 @@ alfa = np.zeros((n+1))
 beta = np.zeros((n+1))
 y = np.zeros((n+1))
 
-w = ((np.power(h,2)*q(x0) - 2)*g2 + h*(2 - h * p(x0))*g1)
-alfa[0] = 2 * g2 / w
-beta[0] = np.power(h,2) * f(x0) * g2 + h * (2 - h * p(x0)*g3 )
+w0 = - h*q(x0)/2 + p(x0)/2 + 1/h
+alfa[0] = (1/h + p(x0)/2) / w0
+beta[0] = -(g3 + h*f(x0)/2) / w0
+#w = ((np.power(h,2)*q(x0) - 2)*g2 + h*(2 - h * p(x0))*g1)
+#alfa[0] = 2 * g2 / w
+#beta[0] = np.power(h,2) * f(x0) * g2 + h * (2 - h * p(x0)*g3 )
 #print(alfa[0],beta[0])
+
 for i in np.arange(1,n):
-	w = ((2*np.power(h,2)*q(x0+h*i) - 4) - alfa[i-1]*(2 - h * p(x0 + h*i)))
-	alfa[i] = c(i) / (b(i) - a(i) * alfa[i-1])
-	beta[i] = (a(i) * beta[i-1] - d(i)) / (b(i) - a(i) * alfa[i-1])
+	w = (b(i) - a(i) * alfa[i-1])
+	alfa[i] = c(i) / w
+	beta[i] = (a(i) * beta[i-1] - d(i)) / w
 
 #for i in np.arange(n+1):
 #	print(i,alfa[i],beta[i])
 
-y[n] = (g6 + d(n)) / (1/h + p(n)/2)#float(( 2 * h * g6 + ((beta[n-1] - beta[n])/alfa[n])*g5 ) / (2.0*h*g4 + (alfa[n-1] - 1/alfa[n])*g5))
+#beta[n] = (g6 + f(xn)) / (1/h + p(n)/2)
+beta[n] = ((1/h +p(xn)/2 -h/2*q(xn)) * beta[n-1] - (g6 + f(xn))) / ((1/h + p(n)/2) - (1/h +p(xn)/2 -h/2*q(xn))*alfa[n-1])
+y[n] = beta[n] #float(( 2 * h * g6 + ((beta[n-1] - beta[n])/alfa[n])*g5 ) / (2.0*h*g4 + (alfa[n-1] - 1/alfa[n])*g5))
 
 for i in np.arange(n-1,-1,-1):
 	 y[i] = beta[i] + alfa[i] * y[i+1]
-x = [x0+h*i for i in np.arange(0,n+1)]
-print 'xi \t yi \t ai \t bi'
-for xi,yi,ai,bi in zip(x,y,alfa,beta):
-	print round(xi,3),'\t',round(yi,3),'\t',round(ai,3),'\t',round(bi,3)
 
+x = [x0+h*i for i in np.arange(0,n+1)]
+
+print 'xi \t\t yi \t\t ai \t\t bi'
+'''
+for xi,yi,ai,bi in zip(x,y,alfa,beta):
+	print round(xi,8),'\t',round(yi,10),'\t',round(ai,10),'\t',round(bi,10)
+'''
+for i in np.arange(0,n+1):
+	if i % int(n/10) == 0:
+		print round(x[i],8),'\t',round(y[i],10),'\t',round(alfa[i],10),'\t',round(beta[i],10)
+	
 			
 #printArray(arr,n)
